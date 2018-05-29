@@ -1,6 +1,6 @@
 seg = "Python decorator".center(40, "*")
 
-#闭包
+#闭包: 外函数返回内函数的引用[函数名]
 def outer(func):
     def inner(**kwargs):
         return func(**kwargs)
@@ -10,14 +10,14 @@ def func(**kwargs):
     for v in kwargs.values():
         print(v)
 
-args = {"des": "Hello", "name": "My name is Losmli", "home": "I am from Hubei"}
+args = {"desc": "Hello", "name": "My name is Losmli", "home": "I am from Hubei"}
 f = outer(func)
 f(**args)
-print(f.__name__)
+#函数名是指向函数的变量,可以被赋值给其他变量
+#函数被调用后才会执行
 #outer(func)返回inner函数, inner函数被赋值给变量f, 调用函数f(**args)即执行inner(**args)
 
 print(seg)
-
 
 #闭包和装饰器
 @outer
@@ -29,11 +29,12 @@ test(**args)
 
 print(seg)
 
-#装饰器: 在不修改原函数的前提下,装饰器可以在原函数执行前和执行后执行其他代码
+#装饰器: 在不修改原函数的情况下,装饰器可以在原函数调用前或调用后执行功能[装饰器就是给原函数添加功能]
 """
 decorators are “wrappers”, which means that they let you execute code
 before and after the function they decorate without modifying the function itself.
 """
+#无参数装饰器
 def hello(func):
     def wrapper():
         print("hello, %s" % func.__name__)
@@ -46,24 +47,22 @@ def foo():
     print("i am foo")
 
 foo()
-print(foo.__name__)
-#foo = hello(foo)
+#等价于foo = hello(foo)
 #hello()是一个decorator，hello(foo)返回函数wrapper，调用foo()将执行新函数wrapper()
 #wrapper()函数内，首先打印，再紧接着调用原始函数func(),再打印
 
 print(seg)
 
-#嵌套装饰器
+#多个装饰器: 给原函数添加多个功能, 但是原函数只执行一次
 @hello
 @hello
 def bar():
     print("i am bar")
 
 bar()
-print(bar.__name__)
-#bar = hello(hello(bar))
-#从里向外解读，再从上向下执行
-#hello(bar)作为一个整体func, 经过hello的decorator后被执行前和执行后分别执行其他代码
+#等价于bar = hello(hello(bar))
+#从上向下执行,但是原函数只执行一次
+#可以将hello(bar)作为一个整体func, 先给func添加功能
 
 print(seg)
 
@@ -83,9 +82,8 @@ def now(a):
 
 arg = "Learning python decorator"
 now(arg)
-print(now.__name__)
-#now = log("hello")(now)
-#首先执行log("hello")，返回的是decorator函数，再调用返回的函数，参数是now函数，返回值最终是wrapper函数
+#等价于now = log("hello")(now)
+#首先执行log("hello")，返回的是decorator函数，再调用返回的decorator函数，参数是now函数，返回值最终是wrapper函数
 #wrapper可以接受不定长的参数,*args通过tuple传递参数,**kwargs通过dict传递参数
 #wrapper()函数内，首先打印，再紧接着调用原始函数func()
 
@@ -109,6 +107,7 @@ def today():
 
 today()
 print(today.__name__)
+#被装饰过的原函数的函数名会变为wrapper
 #@functools.wraps(func)等价于wrapper.__name__ = func.__name__
 
 print(seg)
@@ -130,8 +129,8 @@ def memo(func):
 
 @memo
 def fib(n):
-    if n < 2:
-        return n
+    if n <= 2:
+        return 1
     return fib(n - 1) + fib(n - 2)
 
 print(fib(10))
