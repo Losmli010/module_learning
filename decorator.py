@@ -137,6 +137,34 @@ print(fib(10))
 
 print(seg)
 
+#@property装饰器
+class C(object):
+    def __init__(self, name, age):
+        self.name = name
+        #age为私有属性, 不能直接被外界调用
+        self.__age = age
+
+    @property                     #装饰age函数, 使私有属性age能够被直接访问
+    def age(self):                #函数名必须为私有属性的属性名
+        return self.__age
+
+    @age.setter                    #@属性名.setter, 使私有属性age能被修改
+    def age(self, age):
+        self.__age = age
+
+    @age.deleter
+    def age(self):
+        del self.__age
+
+c = C("somebody", 18)
+# print(c.age)       #如果不定义被@property装饰的age函数, age属性不能被访问
+print(c.__dict__)
+c.age = 28
+c.__age = 38         #动态绑定了一个新属性:__age
+print(c.__dict__)
+
+print(seg)
+
 #内置装饰器classmethod和staticmethod
 class Date(object):
 
@@ -158,7 +186,7 @@ class Date(object):
         return date1
 
     """
-    classmethod doesn't take any obligatory parameters
+    staticmethod doesn't take any obligatory parameters
     (like a class method or instance method does).
     it's basically just a function
     without access to the object and it's internals (fields and another methods)
