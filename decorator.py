@@ -137,14 +137,14 @@ print(fib(10))
 
 print(seg)
 
-#@property装饰器
+#@property装饰器: 将类方法变为类属性
 class C(object):
     def __init__(self, name, age):
         self.name = name
         #age为私有属性, 不能直接被外界调用
         self.__age = age
 
-    @property                     #装饰age函数, 使私有属性age能够被直接访问
+    @property                     #装饰age函数, 使私有属性age能够被外部直接访问
     def age(self):                #函数名必须为私有属性的属性名
         return self.__age
 
@@ -157,17 +157,17 @@ class C(object):
         del self.__age
 
 c = C("somebody", 18)
-# print(c.age)       #如果不定义被@property装饰的age函数, age属性不能被访问
+# print(c.age)               #如果不定义被@property装饰的age函数, age属性不能被访问
 print(c.__dict__)
 c.age = 28
-c.__age = 38         #动态绑定了一个新属性:__age
+c.__age = 38                 #动态绑定了一个新属性:__age
 print(c.__dict__)
 
 print(seg)
 
-#内置装饰器classmethod和staticmethod
+#@classmethod和@staticmethod类方法和静态方法
 class Date(object):
-
+	
     def __init__(self, day=0, month=0, year=0):
         self.day = day
         self.month = month
@@ -177,19 +177,21 @@ class Date(object):
     def from_string(cls, date_as_string):
         """
         cls is an object that holds class itself, not an instance of the class.
-        It's pretty cool because if we inherit our Date class, all children will have from_string defined also.
-        :param date_as_string:
-        :return:
+        cls是当前类[等价于cls = Date], 可以通过cls直接调用类的方法和访问类属性, 也可以通过cls直接创建对象
+		self是当前对象[实例],是实例方法的第一个参数
+		类方法可以通过类名或对象调用,但一般用类名调用
+		类方法中只能访问类属性,不能访问实例属性
         """
         day, month, year = map(int, date_as_string.split("-"))
-        date1 = Date(day, month, year)
+        date1 = cls(day, month, year)
         return date1
 
     """
-    staticmethod doesn't take any obligatory parameters
-    (like a class method or instance method does).
-    it's basically just a function
-    without access to the object and it's internals (fields and another methods)
+    staticmethod doesn't take any obligatory parameters(like a class method or instance method does).
+    it's basically just a function without access to the object and it's internals (fields and another methods)
+	静态方法不需要self或cls作为第一个参数
+	静态方法不能访问类属性和实例属性
+	静态方法可以通过类名或对象调用,但一般用类名调用
     """
     @staticmethod
     def is_date_valid(date_as_string):
@@ -200,3 +202,65 @@ date2 = Date.from_string("26-05-2018")
 is_date = Date.is_date_valid("26-05-2018")
 print(date2)
 print(is_date)
+
+print(seg)
+
+#单例设计模式: 一个类有且仅有一个实例
+#方式一: 重写object.__new__
+class Singleton(object):
+    #类属性
+    __instance = None
+
+    @classmethod
+    def __new__(cls, *args, **kwargs):
+        if not cls.__instance:
+            cls.__instance = super(Singleton,cls).__new__(*args, **kwargs)
+        return cls.__instance
+
+class Test(Singleton):
+    pass
+
+a = Test()
+b = Test()
+print(a)
+print(a is b)
+
+print(seg)
+
+#方式二: 装饰器
+def singleton(cls):
+    instances = {}
+    def getSingleton(*args, **kwargs):
+        if cls not in instances:
+            instances[cls] = cls(*args, **kwargs)
+        return instances[cls]
+    return getSingleton
+
+@singleton
+class TestSingleton(object):
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+t1 = TestSingleton("小王", 18)
+t2 = TestSingleton("小高", 20)
+print(t1.name,t2.name)
+print(t1 is t2)
+
+print(seg)
+
+#方式三
+class Foo(object):
+    __instance = None
+
+    @classmethod
+    def getSingleton(cls):
+        if cls.__instance:
+            return cls.__instance
+        else:
+            cls.__instance = cls()
+            return cls.__instance
+
+obj1 = Foo.getSingleton()
+obj2 = Foo.getSingleton()
+print(obj1 is obj2)
