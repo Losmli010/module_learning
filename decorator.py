@@ -135,6 +135,15 @@ def fib(n):
 
 print(fib(10))
 
+@functools.lru_cache(maxsize=None)
+def fibs(n):
+    if n <= 2:
+        return 1
+    return fibs(n - 1) + fibs(n - 2)
+
+print(fibs(10))
+print(fibs.cache_info())
+
 print(seg)
 
 #@property装饰器: 将类方法变为类属性
@@ -173,15 +182,15 @@ class Date(object):
         self.month = month
         self.year = year
 
+    """
+    cls is an object that holds class itself, not an instance of the class.
+    cls是当前类[等价于cls = Date], 可以通过cls直接访问类属性, 也可以通过cls直接创建对象
+    self是当前对象[实例],是实例方法的第一个参数
+    类方法可以通过类名或对象调用,但一般用类名调用
+    类方法中只能访问类属性,不能访问实例属性
+    """
     @classmethod
     def from_string(cls, date_as_string):
-        """
-        cls is an object that holds class itself, not an instance of the class.
-        cls是当前类[等价于cls = Date], 可以通过cls直接调用类的方法和访问类属性, 也可以通过cls直接创建对象
-		self是当前对象[实例],是实例方法的第一个参数
-		类方法可以通过类名或对象调用,但一般用类名调用
-		类方法中只能访问类属性,不能访问实例属性
-        """
         day, month, year = map(int, date_as_string.split("-"))
         date1 = cls(day, month, year)
         return date1
