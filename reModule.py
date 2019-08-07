@@ -1,28 +1,28 @@
 import re
 
-#re.compile(pattern): 将正则表达式的pattern编写为正则表达式对象
+# re.compile(pattern): 将正则表达式的pattern编写为正则表达式对象
 pattern = re.compile(r"[0-9]")
 print(pattern)
 
-#re.match(pattern, string, flags): 从字符串的首字符开始和pattern匹配, 如果首字符没有匹配则返回None,
+# re.match(pattern, string, flags): 从字符串的首字符开始和pattern匹配, 如果首字符没有匹配则返回None,
 # 否则返回匹配到的子字符串对象, 调用group方法返回结果
 m = re.match(pattern, "222abc12")
 print(m.group())
 
-#re.search(pattern, string, flags): 将字符串从左向右和pattern匹配, 如果搜索到末字符都没有匹配则返回None,
-#否则返回第一次符合匹配规则的子字符串对象, 后续字符不会被搜索, 调用group方法返回结果
+# re.search(pattern, string, flags): 将字符串从左向右和pattern匹配, 如果搜索到末字符都没有匹配则返回None,
+# 否则返回第一次符合匹配规则的子字符串对象, 后续字符不会被搜索, 调用group方法返回结果
 s = re.search(pattern, "dfb")
 print(s)
 
-#re.findall(pattern, string, flags): 将所有匹配到的子字符串以列表的形式返回, 无匹配则返回[]
+# re.findall(pattern, string, flags): 将所有匹配到的子字符串以列表的形式返回, 无匹配则返回[]
 f = re.findall(pattern, "dfgk,.m")
 print(f)
 
-#re.split(pattern, string, flags): 将字符串按匹配模式分割成列表形式返回
+# re.split(pattern, string, flags): 将字符串按匹配模式分割成列表形式返回
 sp = re.split(pattern, "dbc23db3ml5")
 print(sp)
 
-#re.sub(pattern, replace, string): 将匹配到的子字符串替换为replace字符串
+# re.sub(pattern, replace, string): 将匹配到的子字符串替换为replace字符串
 su = re.sub(pattern, "-", "hello2world3bye")
 print(su)
 

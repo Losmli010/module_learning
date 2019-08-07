@@ -1,8 +1,10 @@
-import sys, time, queue
+import time, queue
 from multiprocessing.managers import BaseManager
+
 
 class QueueManager(BaseManager):
     pass
+
 
 QueueManager.register('get_task_queue')
 QueueManager.register('get_result_queue')
