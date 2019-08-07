@@ -1,14 +1,13 @@
 import socket
 
 
-def main():
+def time_client():
     client = socket.socket()          # 创建客户端socket对象
-
-    ip_port = ("127.0.0.1", 8220)    # 服务端IP和port
-    client.connect(ip_port)           # 向服务端发起连接请求
+    ip_port = ("127.0.0.1", 8220)  # 服务端IP和port
+    client.connect(ip_port)  # 向服务端发起连接请求
 
     while True:
-        requirement = input()
+        requirement = "What time is now?"
         client.send(requirement.encode("utf-8"))   # 向服务端发送数据
 
         response = client.recv(1024)                  # 接收来自服务端的数据
@@ -18,4 +17,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    time_client()
