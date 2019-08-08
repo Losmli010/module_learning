@@ -2,8 +2,12 @@ import socket
 
 
 def time_client():
+    """
+    配合select_demo.py使用
+    :return:
+    """
     client = socket.socket()          # 创建客户端socket对象
-    ip_port = ("127.0.0.1", 8080)  # 服务端IP和port
+    ip_port = ("127.0.0.1", 8010)  # 服务端IP和port
     client.connect(ip_port)  # 向服务端发起连接请求
 
     requirement = "What time is now?"
